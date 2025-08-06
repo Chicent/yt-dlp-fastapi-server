@@ -5,10 +5,10 @@ import yt_dlp
 
 app = FastAPI()
 
-# CORS to allow your frontend to access the API
+# CORS to allow frontend access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust this if needed
+    allow_origins=["*"],  # Adjust for production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -17,10 +17,17 @@ app.add_middleware(
 class URLRequest(BaseModel):
     url: str
 
+# Root endpoint for quick live check
+@app.get("/")
+def read_root():
+    return {"message": "FastAPI yt-dlp API is live."}
+
+# Health check route for Render or monitoring
 @app.get("/healthz")
-async def health_check():
+def health_check():
     return {"status": "ok"}
 
+# Main download endpoint
 @app.post("/api/download")
 async def download_video(data: URLRequest):
     url = data.url
