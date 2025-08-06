@@ -17,6 +17,10 @@ app.add_middleware(
 class URLRequest(BaseModel):
     url: str
 
+@app.get("/healthz")
+async def health_check():
+    return {"status": "ok"}
+
 @app.post("/api/download")
 async def download_video(data: URLRequest):
     url = data.url
